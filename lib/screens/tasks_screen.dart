@@ -2,21 +2,12 @@ import 'package:flutter/material.dart';
 import '../widgets/tasks_list.dart';
 import 'add_task_screen.dart';
 import '../models/task.dart';
-class TaskScreen extends StatefulWidget {
+import 'package:provider/provider.dart';
+import '../models/task_data.dart';
+class TaskScreen extends StatelessWidget {
+    
 
-
-  @override
-  _TaskScreenState createState() => _TaskScreenState();
-}
-
-class _TaskScreenState extends State<TaskScreen> {
-  Widget buildBottomSheet(BuildContext context)=> Container();
-
-List<Task> tasks = [Task(name:'Buy milk'),
-                      Task(name:'Buy eggs'),
-                      Task(name:'Buy bread')];
-
-  @override
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:Colors.lightBlueAccent,
@@ -24,13 +15,15 @@ List<Task> tasks = [Task(name:'Buy milk'),
         backgroundColor: Colors.lightBlueAccent,
         child: Icon(Icons.add),
         onPressed:(){
-          showModalBottomSheet(context: context, builder: (context ) => AddTaskScreen((newTaskTitle){
-            setState(() {
-                tasks.add(Task(name:newTaskTitle));
-            });
-          Navigator.pop(context);  
-                      }
-                      )
+          showModalBottomSheet(context: context, 
+          isScrollControlled: true,
+          builder: (context ) => SingleChildScrollView(
+            child:Container(
+              padding: EdgeInsets.only(bottom:MediaQuery.of(context).viewInsets.bottom),
+              child:AddTaskScreen(),
+              ),
+              )
+                      
                       );
         },
       ),
@@ -58,7 +51,7 @@ List<Task> tasks = [Task(name:'Buy milk'),
               fontSize: 50.0,
               fontWeight: FontWeight.w700,
                 )),
-                Text('${tasks.length} Tasks',
+                Text('${Provider.of<TaskData>(context).taskCount} Tasks',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18.0,
@@ -74,12 +67,14 @@ List<Task> tasks = [Task(name:'Buy milk'),
                   borderRadius: BorderRadius.only( 
                     topLeft:Radius.circular(20.0),topRight:Radius.circular(20.0)
                   )),
-                  child:TasksList(tasks)
+                  child:TasksList()
                 ),
               )],
       )
     );
   }
 }
+
+
 
 
